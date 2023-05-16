@@ -174,7 +174,7 @@ public:
   FIntVector GetTileVectorID(TileID TileID) const;
 
   FVector GetTileLocation(TileID TileID) const;
-  
+
   UFUNCTION(BlueprintCallable, Category = "Large Map Manager")
   FVector GetTileLocation(FIntVector TileVectorID) const;
 
@@ -195,7 +195,7 @@ public:
 
   UFUNCTION(BlueprintCallable, Category = "Large Map Manager")
   FCarlaMapTile& GetCarlaMapTile(FIntVector TileVectorID);
-  
+
   FCarlaMapTile* GetCarlaMapTile(TileID TileID);
 
   FCarlaMapTile& LoadCarlaMapTile(FString TileMapPath, TileID TileId);
@@ -240,7 +240,7 @@ protected:
   void GetTilesThatNeedToChangeState(
     const TSet<TileID>& InTilesToConsider,
     TSet<TileID>& OutTilesToBeVisible,
-    TSet<TileID>& OutTilesToHidde);
+    TSet<TileID>& OutTilesToHide);
 
   void UpdateTileState(
     const TSet<TileID>& InTilesToUpdate,
@@ -250,7 +250,7 @@ protected:
 
   void UpdateCurrentTilesLoaded(
     const TSet<TileID>& InTilesToBeVisible,
-    const TSet<TileID>& InTilesToHidde);
+    const TSet<TileID>& InTilesToHide);
 
   UPROPERTY(VisibleAnywhere, Category = "Large Map Manager")
   TMap<uint64, FCarlaMapTile> MapTiles;

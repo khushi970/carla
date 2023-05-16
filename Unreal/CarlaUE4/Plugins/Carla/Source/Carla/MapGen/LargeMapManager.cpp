@@ -355,7 +355,7 @@ void ALargeMapManager::Tick(float DeltaTime)
   // Check if dormant actors have been moved to the load range
   CheckDormantActors();
 
-  // Remove the hero actors that doesn't exits any more from the ActorsToConsider vector
+  // Remove the hero actors that doesn't exists any more from the ActorsToConsider vector
   RemovePendingActorsToRemove();
 
   ConvertActiveToDormantActors();
@@ -715,14 +715,14 @@ void ALargeMapManager::UpdateTilesState()
   }
 
   TSet<TileID> TilesToBeVisible;
-  TSet<TileID> TilesToHidde;
-  GetTilesThatNeedToChangeState(TilesToConsider, TilesToBeVisible, TilesToHidde);
+  TSet<TileID> TilesToHide;
+  GetTilesThatNeedToChangeState(TilesToConsider, TilesToBeVisible, TilesToHide);
 
   UpdateTileState(TilesToBeVisible, true, true, true);
 
-  UpdateTileState(TilesToHidde, false, false, false);
+  UpdateTileState(TilesToHide, false, false, false);
 
-  UpdateCurrentTilesLoaded(TilesToBeVisible, TilesToHidde);
+  UpdateCurrentTilesLoaded(TilesToBeVisible, TilesToHide);
 
 }
 
@@ -892,12 +892,16 @@ void ALargeMapManager::ConvertDormantToActiveActors()
     FCarlaActor* View = CarlaEpisode->FindCarlaActor(Id);
 
     if (View->IsActive()){
-      LM_LOG(Warning, "Spawning dormant at %s\n\tOrigin: %s\n\tRel. location: %s", \
-        *((CurrentOriginD + View->GetActor()->GetActorLocation()).ToString()), \
-        *(CurrentOriginD.ToString()), \
-        *((View->GetActor()->GetActorLocation()).ToString()) \
+      LM_LOG(Warning, "Spawning dormant type %d at %s\n\tOrigin: %s\n\tRel. location: %s",
+        View->GetActorType(),
+        *((CurrentOriginD + View->GetActor()->GetActorLocation()).ToString()),
+        *(CurrentOriginD.ToString()),
+        *((View->GetActor()->GetActorLocation()).ToString())
       );
       ActiveActors.Add(Id);
+      // awake one per frame, to avoid freezing the simulation
+      DormantToActiveActors.Remove(Id);
+      break;
     }
     else
     {
@@ -905,7 +909,7 @@ void ALargeMapManager::ConvertDormantToActiveActors()
       DormantActors.Add(Id);
     }
   }
-  DormantToActiveActors.Reset();
+  // DormantToActiveActors.Reset();
 }
 
 void ALargeMapManager::CheckIfRebaseIsNeeded()
@@ -971,11 +975,11 @@ void ALargeMapManager::GetTilesToConsider(const AActor* ActorToConsider,
 void ALargeMapManager::GetTilesThatNeedToChangeState(
   const TSet<TileID>& InTilesToConsider,
   TSet<TileID>& OutTilesToBeVisible,
-  TSet<TileID>& OutTilesToHidde)
+  TSet<TileID>& OutTilesToHide)
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(ALargeMapManager::GetTilesThatNeedToChangeState);
   OutTilesToBeVisible = InTilesToConsider.Difference(CurrentTilesLoaded);
-  OutTilesToHidde = CurrentTilesLoaded.Difference(InTilesToConsider);
+  OutTilesToHide = CurrentTilesLoaded.Difference(InTilesToConsider);
 }
 
 void ALargeMapManager::UpdateTileState(
@@ -1002,10 +1006,10 @@ void ALargeMapManager::UpdateTileState(
 
 void ALargeMapManager::UpdateCurrentTilesLoaded(
   const TSet<TileID>& InTilesToBeVisible,
-  const TSet<TileID>& InTilesToHidde)
+  const TSet<TileID>& InTilesToHide)
 {
   TRACE_CPUPROFILER_EVENT_SCOPE(ALargeMapManager::UpdateCurrentTilesLoaded);
-  for (const TileID TileID : InTilesToHidde)
+  for (const TileID TileID : InTilesToHide)
   {
     CurrentTilesLoaded.Remove(TileID);
   }
