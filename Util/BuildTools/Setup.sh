@@ -512,7 +512,7 @@ if ${USE_CHRONO} ; then
   # -- Get Chrono and compile it with libc++ -------------------------------------
   # ==============================================================================
 
-  CHRONO_TAG=6.0.0
+  CHRONO_TAG=8.0.0
   # CHRONO_TAG=develop
   CHRONO_REPO=https://github.com/projectchrono/chrono.git
 

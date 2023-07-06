@@ -323,6 +323,12 @@ public class Carla : ModuleRules
 
     PublicIncludePaths.Add(LibCarlaIncludePath);
     PrivateIncludePaths.Add(LibCarlaIncludePath);
+    if (UsingChrono)
+    {
+      string Chronopath = Path.Combine(LibCarlaIncludePath, "chrono_thirdparty", "HACD");
+      PublicIncludePaths.Add(Chronopath);
+      PrivateIncludePaths.Add(Chronopath);
+    }
 
     PublicDefinitions.Add("ASIO_NO_EXCEPTIONS");
     PublicDefinitions.Add("BOOST_NO_EXCEPTIONS");

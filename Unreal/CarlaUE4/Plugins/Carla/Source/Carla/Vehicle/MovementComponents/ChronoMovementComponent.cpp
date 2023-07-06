@@ -268,8 +268,8 @@ void UChronoMovementComponent::TickComponent(float DeltaTime,
   }
 
   const auto ChronoPositionOffset = ChVector<>(0,0,-0.25f);
-  auto VehiclePos = Vehicle->GetVehiclePos() + ChronoPositionOffset;
-  auto VehicleRot = Vehicle->GetVehicleRot();
+  auto VehiclePos = Vehicle->GetPos() + ChronoPositionOffset;
+  auto VehicleRot = Vehicle->GetRot();
   double Time = Vehicle->GetSystem()->GetChTime();
 
   FVector NewLocation = ChronoToUE4Location(VehiclePos);
@@ -305,7 +305,7 @@ FVector UChronoMovementComponent::GetVelocity() const
   if (Vehicle)
   {
     return ChronoToUE4Location(
-        Vehicle->GetVehiclePointVelocity(ChVector<>(0,0,0)));
+        Vehicle->GetPointVelocity(ChVector<>(0,0,0)));
   }
   return FVector();
 }
